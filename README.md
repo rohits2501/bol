@@ -1,56 +1,58 @@
-# Welcome to your Expo app 👋
+# Bol
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Speak Hindi, Hinglish, or English. Bol sends the recording to a small server, Sarvam Saaras writes it down in code-mix mode, and a short cleanup pass removes fillers and spoken corrections such as “scratch that”.
 
-## Get started
+Transcription does not run on the phone. Sarvam Saaras v4 is the only live provider. ElevenLabs, Grok, and Gnani are named on the server interface and are not wired up.
 
-1. Install dependencies
+This repository is a showcase. It is not on the App Store or Play Store.
 
-   ```bash
-   npm install
-   ```
+## What you can run from a clone
 
-2. Start the app
+The dictation screen records a WAV, posts it to your server, and shows the text. That is the path to try first.
 
-   ```bash
-   npx expo start
-   ```
+The Android keyboard records in the keyboard and inserts the text into the field you were typing in. The iOS keyboard cannot use the microphone. It opens Bol, and after you dictate there it inserts the text the app saved for it.
 
-In the output, you'll find options to open the app in a
+A short clip of the web preview is in [docs/demo/bol-dictation.mp4](docs/demo/bol-dictation.mp4). It shows the consent step, then the note that recording runs in the iOS and Android development build.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## Run it
 
-You can start developing by editing the files inside the **src/app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+You need Node 22.13 or newer. Expo SDK 58 does not run on Node 20.
 
 ```bash
-npm run reset-project
+cp .env.example .env
+# put your own Sarvam key in .env as SARVAM_API_KEY
+
+npm install
+npm test
+npm run server
 ```
 
-This command will move the starter code to the **example** directory and create a blank **src/app** directory where you can start developing.
+The server listens on `http://127.0.0.1:8787`. `GET /health` returns `{ "ok": true }`.
 
-### Other setup steps
+In another terminal, start a development build. Expo Go for SDK 58 is not on the stores, and the microphone module is not in Expo Go.
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+```bash
+npx expo run:ios
+# or
+npx expo run:android
+```
 
-## Learn more
+On the Android emulator the screen defaults the server to `http://10.0.2.2:8787`. On the iOS simulator it uses `http://127.0.0.1:8787`. On a phone, set the server field to your computer’s LAN address and save it by leaving the field. The Android keyboard reads that address from the app’s files.
 
-To learn more about developing your project with Expo, look at the following resources:
+iOS builds need an Apple team id in `app.json` under `expo.ios.appleTeamId`. This checkout does not include one.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+Stay on Xcode 26.4 or the closest 26.x you have. Do not move this version to Xcode 27.1.
 
-## Join the community
+## What stays out of git
 
-Join our community of developers creating universal apps.
+`.env`, API keys, store certificates, and real voice recordings. The server reads `SARVAM_API_KEY` from the environment. Bring your own key from [Sarvam](https://www.sarvam.ai/).
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## Keyboard setup
+
+Android: open Bol, allow the microphone, tap “Enable the Bol keyboard”, and turn Bol on in the input-method list. In any text field, switch to Bol and tap Speak.
+
+iOS: install the development build, Settings → General → Keyboard → Keyboards → Add Bol, and allow Full Access so the keyboard can read the shared transcript. Dictate in Bol. Switch back and tap Insert.
+
+## Store listings
+
+Draft App Store and Play copy, the privacy answers, and the consent text are in [store/](store/). Nothing has been submitted.
