@@ -5,6 +5,7 @@
   "dependencies": {
     "@bacons/apple-targets": "^5.0.0",
     "@expo/ui": "~58.0.20",
+    "@house/tokens": "file:vendor/house-tokens-0.1.1.tgz",
     "expo": "~58.0.14",
     "expo-audio": "~58.0.9",
     "expo-constants": "~58.0.12",
@@ -43,7 +44,8 @@
     "ios": "expo run:ios",
     "web": "expo start --web",
     "export:web": "expo export --platform web",
-    "lint": "expo lint"
+    "lint": "expo lint",
+    "check:colors": "house-check-raw-color src"
   },
   "engines": {
     "node": ">=22.13.0"

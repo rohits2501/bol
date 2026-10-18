@@ -17,6 +17,7 @@ import {
 } from 'expo-audio';
 import * as Device from 'expo-device';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { themes } from '@house/tokens';
 
 import { sharePendingText } from '@/dictation/share';
 import { readLocal, writeLocal } from '@/dictation/storage';
@@ -26,6 +27,7 @@ const SERVER_FILE = 'bol-server-url.txt';
 const TERMS_FILE = 'bol-keyterms.txt';
 const CONSENT_FILE = 'bol-consent.txt';
 const MAX_MS = 30_000;
+const color = themes.light.color;
 
 type Phase = 'idle' | 'recording' | 'sending';
 
@@ -158,7 +160,7 @@ export function DictationScreen({ autoStart = false }: { autoStart?: boolean }) 
         onPress={() => void (phase === 'recording' ? finish() : begin())}
         style={[styles.mic, phase === 'recording' && styles.micLive, consent !== true && styles.micOff]}>
         {phase === 'sending' ? (
-          <ActivityIndicator color="#F4EFE6" />
+          <ActivityIndicator color={color.accentContrast} />
         ) : (
           <Text style={styles.micLabel}>{phase === 'recording' ? 'Stop' : 'Speak'}</Text>
         )}
@@ -172,7 +174,7 @@ export function DictationScreen({ autoStart = false }: { autoStart?: boolean }) 
         multiline
         onChangeText={setTranscript}
         placeholder="The cleaned text shows up here."
-        placeholderTextColor="#8A8175"
+        placeholderTextColor={color.textMuted}
         style={styles.transcript}
         value={transcript}
       />
@@ -184,7 +186,7 @@ export function DictationScreen({ autoStart = false }: { autoStart?: boolean }) 
         onBlur={() => void saveFields()}
         onChangeText={setKeyterms}
         placeholder="Indiranagar, PhonePe"
-        placeholderTextColor="#8A8175"
+        placeholderTextColor={color.textMuted}
         style={styles.field}
         value={keyterms}
       />
@@ -243,31 +245,31 @@ async function openKeyboardSettings() {
 
 const styles = StyleSheet.create({
   page: {
-    backgroundColor: '#F4EFE6',
+    backgroundColor: color.bg,
     flexGrow: 1,
     gap: 12,
     paddingHorizontal: 24,
   },
   kicker: {
-    color: '#8C4A32',
+    color: color.accent,
     fontSize: 13,
     letterSpacing: 0.4,
     textTransform: 'uppercase',
   },
   title: {
-    color: '#1C1915',
+    color: color.text,
     fontSize: 48,
     fontWeight: '700',
   },
   lede: {
-    color: '#3E3832',
+    color: color.text,
     fontSize: 17,
     lineHeight: 24,
   },
   mic: {
     alignItems: 'center',
     alignSelf: 'flex-start',
-    backgroundColor: '#C4512C',
+    backgroundColor: color.accent,
     borderRadius: 28,
     height: 88,
     justifyContent: 'center',
@@ -275,32 +277,32 @@ const styles = StyleSheet.create({
     width: 88,
   },
   micLive: {
-    backgroundColor: '#8C1D18',
+    backgroundColor: color.danger,
   },
   micOff: {
     opacity: 0.45,
   },
   micLabel: {
-    color: '#F4EFE6',
+    color: color.accentContrast,
     fontSize: 18,
     fontWeight: '700',
   },
   hint: {
-    color: '#6B6258',
+    color: color.textMuted,
     fontSize: 14,
   },
   label: {
-    color: '#1C1915',
+    color: color.text,
     fontSize: 14,
     fontWeight: '700',
     marginTop: 8,
   },
   transcript: {
-    backgroundColor: '#FFFBF5',
-    borderColor: '#DDD4C6',
+    backgroundColor: color.surface,
+    borderColor: color.borderStrong,
     borderRadius: 16,
     borderWidth: 1,
-    color: '#1C1915',
+    color: color.text,
     fontSize: 18,
     lineHeight: 26,
     minHeight: 120,
@@ -308,54 +310,58 @@ const styles = StyleSheet.create({
     textAlignVertical: 'top',
   },
   field: {
-    backgroundColor: '#FFFBF5',
-    borderColor: '#DDD4C6',
+    backgroundColor: color.surface,
+    borderColor: color.borderStrong,
     borderRadius: 12,
     borderWidth: 1,
-    color: '#1C1915',
+    color: color.text,
     fontSize: 16,
     paddingHorizontal: 14,
     paddingVertical: 12,
   },
   detail: {
-    color: '#3E3832',
+    color: color.textMuted,
     fontSize: 14,
   },
   error: {
-    color: '#8C1D18',
+    color: color.danger,
     fontSize: 15,
     lineHeight: 21,
   },
   secondary: {
     alignSelf: 'flex-start',
-    backgroundColor: '#1C1915',
+    backgroundColor: color.surface,
+    borderColor: color.borderStrong,
     borderRadius: 12,
+    borderWidth: 1,
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
   secondaryLabel: {
-    color: '#F4EFE6',
+    color: color.text,
     fontSize: 15,
     fontWeight: '600',
   },
   note: {
-    color: '#6B6258',
+    color: color.textMuted,
     fontSize: 14,
     lineHeight: 20,
   },
   consent: {
-    backgroundColor: '#FFFBF5',
+    backgroundColor: color.surface,
+    borderColor: color.border,
     borderRadius: 16,
+    borderWidth: 1,
     gap: 10,
     padding: 16,
   },
   consentTitle: {
-    color: '#1C1915',
+    color: color.text,
     fontSize: 18,
     fontWeight: '700',
   },
   consentBody: {
-    color: '#3E3832',
+    color: color.text,
     fontSize: 15,
     lineHeight: 22,
   },

@@ -43,6 +43,10 @@ iOS builds need an Apple team id in `app.json` under `expo.ios.appleTeamId`. Thi
 
 Stay on Xcode 26.4 or the closest 26.x you have. Do not move this version to Xcode 27.1.
 
+## Colors
+
+The dictation screen takes its colors from the house design system's token object (`themes.light.color` from `@house/tokens`, vendored in `vendor/`), the same roles the web apps use as CSS variables. `npm run check:colors` fails if a raw hex or rgb shows up in `src/`. The Android and iOS keyboards are native and keep their own styling.
+
 ## What stays out of git
 
 `.env`, API keys, store certificates, and real voice recordings. The server reads `SARVAM_API_KEY` from the environment. Bring your own key from [Sarvam](https://www.sarvam.ai/).

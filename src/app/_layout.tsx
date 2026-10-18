@@ -1,3 +1,4 @@
+import { themes } from '@house/tokens';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
@@ -9,5 +10,5 @@ export default function RootLayout() {
     SplashScreen.hideAsync().catch(() => undefined);
   }, []);
 
-  return <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: '#F4EFE6' } }} />;
+  return <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: themes.light.color.bg } }} />;
 }
