@@ -38,7 +38,8 @@
   "scripts": {
     "start": "expo start",
     "server": "node server/index.ts",
-    "test": "node --test server/cleanup.test.ts server/transcribe.test.ts",
+    "test": "node --test server/cleanup.test.ts server/transcribe.test.ts scripts/bundle-budget.test.mjs",
+    "perf:budget": "node scripts/check-bundle-budget.mjs",
     "typecheck": "tsc --noEmit",
     "android": "expo run:android",
     "ios": "expo run:ios",

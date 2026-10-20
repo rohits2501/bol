@@ -47,6 +47,8 @@ Stay on Xcode 26.4 or the closest 26.x you have. Do not move this version to Xco
 
 The dictation screen takes its colors from the house design system's token object (`themes.light.color` from `@house/tokens`, vendored in `vendor/`), the same roles the web apps use as CSS variables. `npm run check:colors` fails if a raw hex or rgb shows up in `src/`. The Android and iOS keyboards are native and keep their own styling.
 
+The web preview's gzipped JavaScript is gated in CI. First load is 327.4 kB, ceiling 335.9 kB. See [docs/perf/budgets.md](docs/perf/budgets.md).
+
 ## What stays out of git
 
 `.env`, API keys, store certificates, and real voice recordings. The server reads `SARVAM_API_KEY` from the environment. Bring your own key from [Sarvam](https://www.sarvam.ai/).
