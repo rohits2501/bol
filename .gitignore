@@ -3,6 +3,10 @@
 # dependencies
 node_modules/
 
+# perf comment artifacts
+perf/snapshot.json
+perf-base/
+
 # Expo
 .expo/
 dist/

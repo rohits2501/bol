@@ -7,7 +7,7 @@
  *
  * Run after `npm run export:web`. Print without enforcing: --print
  */
-import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { gzipSync } from 'node:zlib';
@@ -35,8 +35,8 @@ export function evaluateLimit(name, bytes, maxBytes) {
   return null;
 }
 
-function gzipFile(file) {
-  return gzipSync(readFileSync(file), { level: 9 }).length;
+function fileSizes(file) {
+  return { parsed: statSync(file).size, gzip: gzipSync(readFileSync(file), { level: 9 }).length };
 }
 
 function walkJs(dir, out = []) {
@@ -61,13 +61,23 @@ export function measure(distDir) {
   const firstFiles = srcs.map((src) => path.join(distDir, src.replace(/^\//, '')));
   const firstSet = new Set(firstFiles.map((file) => path.resolve(file)));
   let firstLoad = 0;
-  for (const file of firstFiles) firstLoad += gzipFile(file);
+  let firstLoadParsed = 0;
+  for (const file of firstFiles) {
+    const sized = fileSizes(file);
+    firstLoad += sized.gzip;
+    firstLoadParsed += sized.parsed;
+  }
 
   let deferred = 0;
+  let deferredParsed = 0;
   for (const file of walkJs(path.join(distDir, '_expo'))) {
-    if (!firstSet.has(path.resolve(file))) deferred += gzipFile(file);
+    if (!firstSet.has(path.resolve(file))) {
+      const sized = fileSizes(file);
+      deferred += sized.gzip;
+      deferredParsed += sized.parsed;
+    }
   }
-  return { firstLoad, deferred };
+  return { firstLoad, deferred, firstLoadParsed, deferredParsed };
 }
 
 function formatKb(bytes) {
@@ -80,6 +90,29 @@ function main() {
   const measured = measure(distDir);
   const budgetPath = 'perf/budgets.json';
   const budgets = existsSync(budgetPath) ? JSON.parse(readFileSync(budgetPath, 'utf8')) : null;
+  const snapshotPath = 'perf/snapshot.json';
+  let benches = [];
+  if (existsSync(snapshotPath)) {
+    try {
+      benches = JSON.parse(readFileSync(snapshotPath, 'utf8')).benches ?? [];
+    } catch {
+      benches = [];
+    }
+  }
+  writeFileSync(
+    snapshotPath,
+    `${JSON.stringify(
+      {
+        bundles: [
+          { name: 'first-load JS', parsed: measured.firstLoadParsed, gzip: measured.firstLoad },
+          { name: 'deferred JS', parsed: measured.deferredParsed, gzip: measured.deferred },
+        ],
+        benches,
+      },
+      null,
+      2,
+    )}\n`,
+  );
 
   const rows = [
     ['first-load JS', measured.firstLoad, budgets?.firstLoadJs?.maxBytes],

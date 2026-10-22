@@ -13,6 +13,10 @@ Ceilings started as the measured size, rounded up to the next KiB, plus 8 KiB. R
 
 Most of the first load is `entry-*.js`. The shared runtime and the common chunk are the rest.
 
+CI writes `perf/snapshot.json` after the export: parsed bytes and level-9 gzip for first-load JS and deferred JS. A sticky pull-request comment, `<!-- perf-budget -->`, diffs that file against the snapshot from the last successful build on `main`. `baselineBytes` is not the diff. A growth of at least 100 B or 1% is marked. The comment does not fail the build. The gzip ceiling still does. Raise `maxBytes` in the same change that grows the bundle.
+
+There is no browser bench. The shipping build is the native app, and CI has no device build.
+
 ```bash
 npm run export:web
 npm run perf:budget
